@@ -35,6 +35,10 @@ DATABASE_URL="postgresql://gaptrip:password@db:5432/gaptrip"
 # AUTH_SECRET は openssl rand -base64 32 等で生成
 AUTH_SECRET="your-secret-here"
 AUTH_URL="http://localhost:3000"
+
+# Google Places API (New)
+# Google Cloud Console で取得。サーバーサイド専用（クライアントに露出させない）
+GOOGLE_PLACES_API_KEY="your-google-places-api-key"
 ```
 
 ### `.env.example`（テンプレート、git管理対象）
@@ -43,6 +47,7 @@ AUTH_URL="http://localhost:3000"
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
 AUTH_SECRET="your-secret-here"
 AUTH_URL="http://localhost:3000"
+GOOGLE_PLACES_API_KEY="your-google-places-api-key"
 ```
 
 ### 環境変数の説明
@@ -52,6 +57,7 @@ AUTH_URL="http://localhost:3000"
 | `DATABASE_URL` | Yes | PrismaのDB接続文字列。Docker Compose経由ならホストは `db` |
 | `AUTH_SECRET` | Yes | JWTの署名・暗号化キー。32文字以上のランダム文字列。NextAuth v5の正式名（v4の `NEXTAUTH_SECRET` は使用しないこと） |
 | `AUTH_URL` | Yes | アプリのベースURL。NextAuth v5の正式名（v4の `NEXTAUTH_URL` は使用しないこと） |
+| `GOOGLE_PLACES_API_KEY` | Yes | Google Places API (New) のAPIキー。Google Cloud Consoleで取得。サーバーサイド専用（Route Handler `lib/google-places.ts` 内でのみ使用し、クライアントに露出させない）。Billing設定が必要 |
 
 ---
 
@@ -79,7 +85,7 @@ datasource db {
 
 ## セットアップ手順（初回）
 
-1. `.env.local` を `.env.example` をもとに作成
+1. `.env.local` を `.env.example` をもとに作成（`GOOGLE_PLACES_API_KEY` はGoogle Cloud Consoleで取得し設定）
 2. `Dockerfile` に `RUN mkdir -p /app/public/uploads` を含めること（bind mount のマウント先ディレクトリが存在しないとコンテナ起動時にエラーになる）
 3. `docker compose up -d` でコンテナ起動
 4. `npx prisma migrate dev` でDB初期化
