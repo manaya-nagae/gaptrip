@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GapTrip MVP - Design Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d' },
+            want: { bg: '#fef3c7', text: '#92400e', border: '#f59e0b' },
+            went: { bg: '#dbeafe', text: '#1e40af', border: '#3b82f6' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .screen { display: none; }
+    .screen.active { display: flex; flex-direction: column; }
+    .phone-frame { width: 390px; height: 844px; }
+    .screen-selector.active { background-color: #16a34a; color: white; }
+    .star { cursor: pointer; transition: color 0.1s; }
+    .star.filled { color: #f59e0b; }
+    .star.empty { color: #d1d5db; }
+    .gap-positive { color: #16a34a; }
+    .gap-negative { color: #ef4444; }
+    /* Simple Japan map styling */
+    .prefecture { fill: #e5e7eb; stroke: #fff; stroke-width: 1; cursor: pointer; transition: fill 0.2s; }
+    .prefecture:hover { fill: #d1d5db; }
+    .prefecture.visited { fill: #4ade80; }
+    .prefecture.visited:hover { fill: #22c55e; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8">
+
+  <!-- Header -->
+  <div class="mb-6 text-center">
+    <h1 class="text-2xl font-bold text-gray-800">GapTrip MVP - Design Mockup</h1>
+    <p class="text-sm text-gray-500 mt-1">画面をクリックして切り替え</p>
+  </div>
+
+  <!-- Screen Selector -->
+  <div class="flex flex-wrap gap-2 mb-6 justify-center max-w-3xl px-4">
+    <button onclick="showScreen('login')" class="screen-selector active px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">ログイン</button>
+    <button onclick="showScreen('register')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">登録</button>
+    <button onclick="showScreen('map')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">マップ</button>
+    <button onclick="showScreen('spots')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">一覧</button>
+    <button onclick="showScreen('detail-want')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">詳細(WANT)</button>
+    <button onclick="showScreen('detail-went')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">詳細(WENT)</button>
+    <button onclick="showScreen('new-spot')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">登録フォーム</button>
+    <button onclick="showScreen('record')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">現実記録</button>
+    <button onclick="showScreen('edit')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">編集</button>
+    <button onclick="showScreen('profile')" class="screen-selector px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">プロフィール</button>
+  </div>
+
+  <!-- Phone Frame -->
+  <div class="phone-frame bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-800 relative">
+
+    <!-- ========== LOGIN ========== -->
+    <div id="screen-login" class="screen active h-full">
+      <div class="flex-1 flex flex-col justify-center px-8">
+        <div class="text-center mb-10">
+          <div class="text-5xl mb-3">🗾</div>
+          <h1 class="text-3xl font-bold text-primary-700">GapTrip</h1>
+          <p class="text-sm text-gray-500 mt-1">妄想と現実のギャップを楽しもう</p>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">メールアドレス</label>
+            <input type="email" placeholder="email@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">パスワード</label>
+            <input type="password" placeholder="8文字以上" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          </div>
+          <button class="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition shadow-sm">ログイン</button>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-6">アカウントをお持ちでない方は <a href="#" class="text-primary-600 font-medium hover:underline" onclick="showScreen('register');return false;">新規登録</a></p>
+      </div>
+    </div>
+
+    <!-- ========== REGISTER ========== -->
+    <div id="screen-register" class="screen h-full">
+      <div class="flex-1 flex flex-col justify-center px-8">
+        <div class="text-center mb-8">
+          <h1 class="text-2xl font-bold text-gray-800">アカウント作成</h1>
+          <p class="text-sm text-gray-500 mt-1">旅の記録を始めよう</p>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">名前 <span class="text-gray-400">(任意)</span></label>
+            <input type="text" placeholder="表示名" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">メールアドレス</label>
+            <input type="email" placeholder="email@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">パスワード</label>
+            <input type="password" placeholder="8文字以上" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+          </div>
+          <button class="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition shadow-sm">登録する</button>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-6">既にアカウントをお持ちの方は <a href="#" class="text-primary-600 font-medium hover:underline" onclick="showScreen('login');return false;">ログイン</a></p>
+      </div>
+    </div>
+
+    <!-- ========== MAP ========== -->
+    <div id="screen-map" class="screen h-full">
+      <!-- Status Bar -->
+      <div class="bg-primary-600 text-white px-6 py-4 pb-6">
+        <h1 class="text-lg font-bold">GapTrip</h1>
+        <div class="mt-3 flex items-baseline gap-2">
+          <span class="text-4xl font-bold">5</span>
+          <span class="text-lg opacity-80">/ 47</span>
+          <span class="ml-2 text-sm bg-white/20 px-2 py-0.5 rounded-full">10.6%</span>
+        </div>
+        <p class="text-sm opacity-70 mt-1">制覇率</p>
+      </div>
+      <!-- Map Area -->
+      <div class="flex-1 bg-gray-50 flex items-center justify-center relative overflow-hidden">
+        <!-- Simplified Japan Map SVG -->
+        <svg viewBox="0 0 400 560" class="w-72 h-auto">
+          <!-- Hokkaido -->
+          <path class="prefecture visited" d="M280,30 L340,20 L360,50 L350,90 L320,100 L290,80 L270,50 Z" />
+          <text x="315" y="60" text-anchor="middle" class="text-[8px] fill-white font-bold">北海道</text>
+          <!-- Tohoku -->
+          <path class="prefecture" d="M280,120 L310,110 L320,140 L315,180 L295,190 L275,170 L270,140 Z" />
+          <text x="295" y="155" text-anchor="middle" class="text-[7px] fill-gray-500">東北</text>
+          <!-- Kanto -->
+          <path class="prefecture visited" d="M275,195 L310,190 L320,210 L315,240 L290,245 L270,230 L265,210 Z" />
+          <text x="292" y="220" text-anchor="middle" class="text-[7px] fill-white font-bold">関東</text>
+          <!-- Chubu -->
+          <path class="prefecture visited" d="M230,180 L270,185 L275,210 L265,240 L240,250 L220,235 L215,210 Z" />
+          <text x="245" y="218" text-anchor="middle" class="text-[7px] fill-white font-bold">中部</text>
+          <!-- Kinki -->
+          <path class="prefecture" d="M210,245 L245,250 L250,275 L240,300 L215,305 L200,290 L195,265 Z" />
+          <text x="222" y="278" text-anchor="middle" class="text-[7px] fill-gray-500">近畿</text>
+          <!-- Chugoku -->
+          <path class="prefecture" d="M155,265 L195,260 L200,285 L195,310 L170,315 L150,300 L145,280 Z" />
+          <text x="172" y="290" text-anchor="middle" class="text-[7px] fill-gray-500">中国</text>
+          <!-- Shikoku -->
+          <path class="prefecture" d="M175,320 L210,315 L215,335 L205,355 L180,358 L165,345 L165,330 Z" />
+          <text x="190" y="340" text-anchor="middle" class="text-[7px] fill-gray-500">四国</text>
+          <!-- Kyushu -->
+          <path class="prefecture visited" d="M110,320 L145,315 L155,340 L150,375 L135,395 L115,390 L100,365 L100,340 Z" />
+          <text x="127" y="358" text-anchor="middle" class="text-[7px] fill-white font-bold">九州</text>
+          <!-- Okinawa -->
+          <path class="prefecture visited" d="M70,460 L90,455 L95,475 L85,495 L70,498 L60,485 L62,468 Z" />
+          <text x="78" y="480" text-anchor="middle" class="text-[7px] fill-white font-bold">沖縄</text>
+        </svg>
+        <div class="absolute bottom-4 left-0 right-0 text-center">
+          <p class="text-xs text-gray-400">都道府県をタップしてスポットを確認</p>
+        </div>
+      </div>
+      <!-- Bottom Nav -->
+      <div class="flex border-t border-gray-200 bg-white">
+        <button class="flex-1 py-3 flex flex-col items-center text-primary-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <span class="text-xs mt-0.5 font-medium">マップ</span>
+        </button>
+        <button onclick="showScreen('spots')" class="flex-1 py-3 flex flex-col items-center text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+          <span class="text-xs mt-0.5">一覧</span>
+        </button>
+        <button onclick="showScreen('profile')" class="flex-1 py-3 flex flex-col items-center text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span class="text-xs mt-0.5">プロフィール</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ========== SPOT LIST ========== -->
+    <div id="screen-spots" class="screen h-full">
+      <!-- Header -->
+      <div class="bg-white px-4 py-3 border-b border-gray-200">
+        <h1 class="text-lg font-bold text-gray-800">スポット一覧</h1>
+        <!-- Filters -->
+        <div class="flex gap-2 mt-3">
+          <select class="flex-1 text-sm px-3 py-2 rounded-lg border border-gray-300 bg-gray-50">
+            <option>すべての都道府県</option>
+            <option>東京都</option>
+            <option>北海道</option>
+          </select>
+          <select class="text-sm px-3 py-2 rounded-lg border border-gray-300 bg-gray-50">
+            <option>すべて</option>
+            <option>WANT</option>
+            <option>WENT</option>
+          </select>
+        </div>
+        <div class="flex justify-between items-center mt-2">
+          <span class="text-xs text-gray-500">全8件</span>
+          <select class="text-xs px-2 py-1 rounded border border-gray-200 bg-gray-50">
+            <option>更新日:新しい順</option>
+            <option>期待度:高い順</option>
+          </select>
+        </div>
+      </div>
+      <!-- Cards -->
+      <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50">
+        <!-- WENT Card -->
+        <div onclick="showScreen('detail-went')" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition">
+          <div class="flex">
+            <div class="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center shrink-0">
+              <span class="text-3xl">🍣</span>
+            </div>
+            <div class="flex-1 p-3 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">WENT</span>
+                <span class="text-xs text-gray-400">東京都</span>
+              </div>
+              <h3 class="font-bold text-gray-800 mt-1 truncate">築地場外市場</h3>
+              <p class="text-xs text-gray-500 mt-0.5">食事</p>
+              <div class="flex items-center gap-1 mt-1">
+                <span class="text-xs text-gray-500">期待度★4</span>
+                <span class="text-xs text-gray-400">→</span>
+                <span class="text-xs text-gray-500">満足度★5</span>
+                <span class="text-xs font-bold gap-positive">(+1)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- WANT Card -->
+        <div onclick="showScreen('detail-want')" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition">
+          <div class="flex">
+            <div class="w-24 h-24 bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center shrink-0">
+              <span class="text-3xl">⛩️</span>
+            </div>
+            <div class="flex-1 p-3 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">WANT</span>
+                <span class="text-xs text-gray-400">京都府</span>
+              </div>
+              <h3 class="font-bold text-gray-800 mt-1 truncate">伏見稲荷大社</h3>
+              <p class="text-xs text-gray-500 mt-0.5">観光</p>
+              <div class="mt-1">
+                <span class="text-xs text-gray-500">期待度★5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- WENT Card 2 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition">
+          <div class="flex">
+            <div class="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center shrink-0">
+              <span class="text-3xl">🏨</span>
+            </div>
+            <div class="flex-1 p-3 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">WENT</span>
+                <span class="text-xs text-gray-400">北海道</span>
+              </div>
+              <h3 class="font-bold text-gray-800 mt-1 truncate">星野リゾート トマム</h3>
+              <p class="text-xs text-gray-500 mt-0.5">宿泊</p>
+              <div class="flex items-center gap-1 mt-1">
+                <span class="text-xs text-gray-500">期待度★5</span>
+                <span class="text-xs text-gray-400">→</span>
+                <span class="text-xs text-gray-500">満足度★3</span>
+                <span class="text-xs font-bold gap-negative">(-2)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- WANT Card 2 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition">
+          <div class="flex">
+            <div class="w-24 h-24 bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center shrink-0">
+              <span class="text-3xl">🏄</span>
+            </div>
+            <div class="flex-1 p-3 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">WANT</span>
+                <span class="text-xs text-gray-400">沖縄県</span>
+              </div>
+              <h3 class="font-bold text-gray-800 mt-1 truncate">美ら海水族館</h3>
+              <p class="text-xs text-gray-500 mt-0.5">観光</p>
+              <div class="mt-1">
+                <span class="text-xs text-gray-500">期待度★4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Spacer for FAB -->
+        <div class="h-16"></div>
+      </div>
+      <!-- FAB -->
+      <div class="absolute bottom-20 right-6">
+        <button onclick="showScreen('new-spot')" class="w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg flex items-center justify-center text-2xl font-light hover:bg-primary-700 transition hover:shadow-xl">+</button>
+      </div>
+      <!-- Bottom Nav -->
+      <div class="flex border-t border-gray-200 bg-white">
+        <button onclick="showScreen('map')" class="flex-1 py-3 flex flex-col items-center text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <span class="text-xs mt-0.5">マップ</span>
+        </button>
+        <button class="flex-1 py-3 flex flex-col items-center text-primary-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+          <span class="text-xs mt-0.5 font-medium">一覧</span>
+        </button>
+        <button onclick="showScreen('profile')" class="flex-1 py-3 flex flex-col items-center text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span class="text-xs mt-0.5">プロフィール</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ========== DETAIL (WANT) ========== -->
+    <div id="screen-detail-want" class="screen h-full">
+      <div class="flex-1 overflow-y-auto">
+        <!-- Hero -->
+        <div class="bg-gradient-to-br from-amber-50 to-orange-100 h-48 flex items-center justify-center relative">
+          <span class="text-6xl">⛩️</span>
+          <button onclick="showScreen('spots')" class="absolute top-4 left-4 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center shadow-sm">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+        </div>
+        <!-- Content -->
+        <div class="px-5 py-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-100 text-amber-700">WANT</span>
+            <span class="text-xs text-gray-400">京都府 / 観光</span>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">伏見稲荷大社</h1>
+          <div class="mt-4">
+            <p class="text-sm font-medium text-gray-500 mb-1">期待度</p>
+            <div class="flex gap-0.5">
+              <span class="star filled text-xl">★</span>
+              <span class="star filled text-xl">★</span>
+              <span class="star filled text-xl">★</span>
+              <span class="star filled text-xl">★</span>
+              <span class="star filled text-xl">★</span>
+            </div>
+          </div>
+          <div class="mt-4">
+            <p class="text-sm font-medium text-gray-500 mb-1">メモ</p>
+            <p class="text-sm text-gray-700 leading-relaxed">千本鳥居がすごいらしい。朝早く行くと人が少なくて良いとのこと。お稲荷さんも食べたい。</p>
+          </div>
+          <div class="mt-4 text-xs text-gray-400">
+            登録日: 2026-03-15
+          </div>
+          <!-- Actions -->
+          <div class="mt-6 space-y-3">
+            <button onclick="showScreen('record')" class="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition shadow-sm text-sm">
+              行ってきた！
+            </button>
+            <div class="flex gap-3">
+              <button onclick="showScreen('edit')" class="flex-1 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition text-sm">編集</button>
+              <button class="flex-1 py-2.5 border border-red-200 text-red-600 font-medium rounded-xl hover:bg-red-50 transition text-sm">削除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom Nav -->
+      <div class="flex border-t border-gray-200 bg-white">
+        <button onclick="showScreen('map')" class="flex-1 py-3 flex flex-col items-center text-gray-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="text-xs mt-0.5">マップ</span></button>
+        <button onclick="showScreen('spots')" class="flex-1 py-3 flex flex-col items-center text-primary-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg><span class="text-xs mt-0.5 font-medium">一覧</span></button>
+        <button onclick="showScreen('profile')" class="flex-1 py-3 flex flex-col items-center text-gray-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span class="text-xs mt-0.5">プロフィール</span></button>
+      </div>
+    </div>
+
+    <!-- ========== DETAIL (WENT) ========== -->
+    <div id="screen-detail-went" class="screen h-full">
+      <div class="flex-1 overflow-y-auto">
+        <!-- Hero with image -->
+        <div class="bg-gradient-to-br from-blue-100 to-cyan-100 h-48 flex items-center justify-center relative">
+          <span class="text-6xl">🍣</span>
+          <button onclick="showScreen('spots')" class="absolute top-4 left-4 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center shadow-sm">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+        </div>
+        <!-- Content -->
+        <div class="px-5 py-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">WENT</span>
+            <span class="text-xs text-gray-400">東京都 / 食事</span>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">築地場外市場</h1>
+
+          <!-- Gap Score -->
+          <div class="mt-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-100">
+            <div class="flex items-center justify-between">
+              <div class="text-center">
+                <p class="text-xs text-gray-500">期待度</p>
+                <div class="flex gap-0.5 mt-1">
+                  <span class="star filled text-base">★</span><span class="star filled text-base">★</span><span class="star filled text-base">★</span><span class="star filled text-base">★</span><span class="star empty text-base">★</span>
+                </div>
+              </div>
+              <div class="text-2xl text-gray-300">→</div>
+              <div class="text-center">
+                <p class="text-xs text-gray-500">満足度</p>
+                <div class="flex gap-0.5 mt-1">
+                  <span class="star filled text-base">★</span><span class="star filled text-base">★</span><span class="star filled text-base">★</span><span class="star filled text-base">★</span><span class="star filled text-base">★</span>
+                </div>
+              </div>
+              <div class="text-center">
+                <p class="text-xs text-gray-500">ギャップ</p>
+                <p class="text-2xl font-bold gap-positive">+1</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <p class="text-sm font-medium text-gray-500 mb-1">メモ</p>
+            <p class="text-sm text-gray-700 leading-relaxed">新鮮な海鮮が食べたい。朝イチで行くのが良いらしい。</p>
+          </div>
+          <div class="mt-4">
+            <p class="text-sm font-medium text-gray-500 mb-1">感想</p>
+            <p class="text-sm text-gray-700 leading-relaxed">朝6時に到着。想像以上に活気があって最高だった！マグロの中落ちとウニいくら丼が絶品。また絶対来る。</p>
+          </div>
+          <div class="mt-3 text-xs text-gray-400">
+            訪問日: 2026-03-20 / 登録日: 2026-03-01
+          </div>
+          <!-- Actions -->
+          <div class="mt-6 flex gap-3">
+            <button onclick="showScreen('edit')" class="flex-1 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition text-sm">編集</button>
+            <button class="flex-1 py-2.5 border border-red-200 text-red-600 font-medium rounded-xl hover:bg-red-50 transition text-sm">削除</button>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom Nav -->
+      <div class="flex border-t border-gray-200 bg-white">
+        <button onclick="showScreen('map')" class="flex-1 py-3 flex flex-col items-center text-gray-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="text-xs mt-0.5">マップ</span></button>
+        <button onclick="showScreen('spots')" class="flex-1 py-3 flex flex-col items-center text-primary-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg><span class="text-xs mt-0.5 font-medium">一覧</span></button>
+        <button onclick="showScreen('profile')" class="flex-1 py-3 flex flex-col items-center text-gray-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span class="text-xs mt-0.5">プロフィール</span></button>
+      </div>
+    </div>
+
+    <!-- ========== NEW SPOT ========== -->
+    <div id="screen-new-spot" class="screen h-full">
+      <div class="bg-white px-4 py-3 border-b border-gray-200 flex items-center">
+        <button onclick="showScreen('spots')" class="mr-3 text-gray-500">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <h1 class="text-lg font-bold text-gray-800">スポット登録</h1>
+      </div>
+      <div class="flex-1 overflow-y-auto px-5 py-4 space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">スポット名 <span class="text-red-500">*</span></label>
+          <input type="text" placeholder="例: 伏見稲荷大社" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">都道府県 <span class="text-red-500">*</span></label>
+          <select class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <option value="">選択してください</option>
+            <option>北海道</option><option>東京都</option><option>京都府</option><option>大阪府</option><option>沖縄県</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">カテゴリ <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-3 gap-2">
+            <button class="py-2 px-3 rounded-lg border-2 border-primary-500 bg-primary-50 text-primary-700 text-sm font-medium">食事</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm hover:border-gray-300">観光</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm hover:border-gray-300">宿泊</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm hover:border-gray-300">アクティビティ</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm hover:border-gray-300">買い物</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm hover:border-gray-300">その他</button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">期待度 <span class="text-red-500">*</span></label>
+          <div class="flex gap-2 justify-center">
+            <span class="star filled text-3xl">★</span>
+            <span class="star filled text-3xl">★</span>
+            <span class="star filled text-3xl">★</span>
+            <span class="star filled text-3xl">★</span>
+            <span class="star empty text-3xl">★</span>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">メモ <span class="text-gray-400">(任意)</span></label>
+          <textarea rows="3" placeholder="気になるポイントなど" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
+        </div>
+        <div class="text-center text-xs text-gray-400 py-2 border-t border-dashed border-gray-200">
+          画像は「行ってきた！」記録時に登録できます
+        </div>
+        <button class="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition shadow-sm">保存する</button>
+        <div class="h-4"></div>
+      </div>
+    </div>
+
+    <!-- ========== RECORD (WENT) ========== -->
+    <div id="screen-record" class="screen h-full">
+      <div class="bg-white px-4 py-3 border-b border-gray-200 flex items-center">
+        <button onclick="showScreen('detail-want')" class="mr-3 text-gray-500">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <h1 class="text-lg font-bold text-gray-800">行ってきた！</h1>
+      </div>
+      <div class="flex-1 overflow-y-auto px-5 py-4 space-y-5">
+        <!-- Reference display -->
+        <div class="bg-amber-50 rounded-xl p-4 border border-amber-100">
+          <p class="text-sm font-medium text-gray-800">伏見稲荷大社</p>
+          <div class="flex items-center gap-1 mt-1">
+            <span class="text-xs text-gray-500">期待度:</span>
+            <span class="star filled text-sm">★★★★★</span>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">満足度 <span class="text-red-500">*</span></label>
+          <div class="flex gap-2 justify-center">
+            <span class="star filled text-3xl">★</span>
+            <span class="star filled text-3xl">★</span>
+            <span class="star filled text-3xl">★</span>
+            <span class="star filled text-3xl">★</span>
+            <span class="star filled text-3xl">★</span>
+          </div>
+          <p class="text-center text-sm text-primary-600 font-medium mt-2">ギャップ: ±0</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">感想 <span class="text-gray-400">(任意)</span></label>
+          <textarea rows="3" placeholder="実際に行ってみてどうだった？" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">写真 <span class="text-gray-400">(任意)</span></label>
+          <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-primary-400 transition cursor-pointer">
+            <svg class="w-10 h-10 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <p class="text-sm text-gray-500 mt-2">タップして写真を選択</p>
+            <p class="text-xs text-gray-400 mt-1">JPEG/PNG、最大5MB</p>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">訪問日 <span class="text-gray-400">(任意)</span></label>
+          <input type="date" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <button class="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition shadow-sm">記録する</button>
+        <div class="h-4"></div>
+      </div>
+    </div>
+
+    <!-- ========== EDIT ========== -->
+    <div id="screen-edit" class="screen h-full">
+      <div class="bg-white px-4 py-3 border-b border-gray-200 flex items-center">
+        <button onclick="showScreen('detail-went')" class="mr-3 text-gray-500">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <h1 class="text-lg font-bold text-gray-800">スポット編集</h1>
+      </div>
+      <div class="flex-1 overflow-y-auto px-5 py-4 space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">スポット名 <span class="text-red-500">*</span></label>
+          <input type="text" value="築地場外市場" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">都道府県 <span class="text-red-500">*</span></label>
+          <select class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50">
+            <option selected>東京都</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">カテゴリ <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-3 gap-2">
+            <button class="py-2 px-3 rounded-lg border-2 border-primary-500 bg-primary-50 text-primary-700 text-sm font-medium">食事</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm">観光</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm">宿泊</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm">アクティビティ</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm">買い物</button>
+            <button class="py-2 px-3 rounded-lg border border-gray-200 text-gray-600 text-sm">その他</button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">期待度 <span class="text-red-500">*</span></label>
+          <div class="flex gap-2 justify-center">
+            <span class="star filled text-3xl">★</span><span class="star filled text-3xl">★</span><span class="star filled text-3xl">★</span><span class="star filled text-3xl">★</span><span class="star empty text-3xl">★</span>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">メモ</label>
+          <textarea rows="2" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 resize-none">新鮮な海鮮が食べたい。朝イチで行くのが良いらしい。</textarea>
+        </div>
+        <!-- WENT-only fields -->
+        <div class="border-t border-gray-200 pt-4">
+          <p class="text-xs text-blue-600 font-medium mb-4">WENT記録の修正</p>
+          <div class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">満足度 <span class="text-red-500">*</span></label>
+              <div class="flex gap-2 justify-center">
+                <span class="star filled text-3xl">★</span><span class="star filled text-3xl">★</span><span class="star filled text-3xl">★</span><span class="star filled text-3xl">★</span><span class="star filled text-3xl">★</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">感想</label>
+              <textarea rows="2" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 resize-none">朝6時に到着。想像以上に活気があって最高だった！</textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">訪問日</label>
+              <input type="date" value="2026-03-20" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50">
+            </div>
+          </div>
+        </div>
+        <div class="text-center text-xs text-gray-400 py-2">
+          画像の変更はこの画面ではできません
+        </div>
+        <button class="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition shadow-sm">更新する</button>
+        <div class="h-4"></div>
+      </div>
+    </div>
+
+    <!-- ========== PROFILE ========== -->
+    <div id="screen-profile" class="screen h-full">
+      <div class="bg-white px-4 py-3 border-b border-gray-200">
+        <h1 class="text-lg font-bold text-gray-800">プロフィール</h1>
+      </div>
+      <div class="flex-1 px-5 py-6">
+        <div class="flex items-center gap-4 mb-8">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
+            <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-gray-800">旅好きタロウ</h2>
+            <p class="text-sm text-gray-500">taro@example.com</p>
+          </div>
+        </div>
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-3 mb-8">
+          <div class="bg-gray-50 rounded-xl p-3 text-center">
+            <p class="text-2xl font-bold text-gray-800">8</p>
+            <p class="text-xs text-gray-500">全スポット</p>
+          </div>
+          <div class="bg-amber-50 rounded-xl p-3 text-center">
+            <p class="text-2xl font-bold text-amber-700">4</p>
+            <p class="text-xs text-gray-500">WANT</p>
+          </div>
+          <div class="bg-blue-50 rounded-xl p-3 text-center">
+            <p class="text-2xl font-bold text-blue-700">4</p>
+            <p class="text-xs text-gray-500">WENT</p>
+          </div>
+        </div>
+        <button onclick="showScreen('login')" class="w-full py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition">ログアウト</button>
+      </div>
+      <!-- Bottom Nav -->
+      <div class="flex border-t border-gray-200 bg-white mt-auto">
+        <button onclick="showScreen('map')" class="flex-1 py-3 flex flex-col items-center text-gray-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="text-xs mt-0.5">マップ</span></button>
+        <button onclick="showScreen('spots')" class="flex-1 py-3 flex flex-col items-center text-gray-400"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg><span class="text-xs mt-0.5">一覧</span></button>
+        <button class="flex-1 py-3 flex flex-col items-center text-primary-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span class="text-xs mt-0.5 font-medium">プロフィール</span></button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function showScreen(name) {
+      // Hide all screens
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      // Show target
+      document.getElementById('screen-' + name).classList.add('active');
+      // Update selector buttons
+      document.querySelectorAll('.screen-selector').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.includes(getScreenLabel(name))) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    function getScreenLabel(name) {
+      const map = {
+        'login': 'ログイン',
+        'register': '登録',
+        'map': 'マップ',
+        'spots': '一覧',
+        'detail-want': '詳細(WANT)',
+        'detail-went': '詳細(WENT)',
+        'new-spot': '登録フォーム',
+        'record': '現実記録',
+        'edit': '編集',
+        'profile': 'プロフィール',
+      };
+      return map[name] || name;
+    }
+  </script>
+
+</body>
+</html>
