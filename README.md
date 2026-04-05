@@ -35,7 +35,7 @@ docker compose up -d --build
 docker compose exec app npx prisma migrate dev
 ```
 
-セットアップ完了後、http://localhost:3000 にアクセスできます。
+セットアップ完了後、http://localhost:3000 にアクセスできますよ。
 
 ## 開発コマンド
 
